@@ -112,6 +112,25 @@ public class Computer extends Player {
     }
 
     @Override
+    public List<String> comparison(int taille, List<Integer> tentative, List<Integer> goal) {
+        List<String> comparer = new ArrayList<>();
+        for (int i = 0; i < taille; i++) {
+            comparer.add(" ");
+            Integer a = tentative.get(i);
+            Integer b = goal.get(i);
+            int comparisonresult = a.compareTo(b);
+            if (comparisonresult > 0) {
+                comparer.set(i, " + ");
+            } else if (comparisonresult < 0) {
+                comparer.set(i, " - ");
+            } else if (comparisonresult == 0) {
+                comparer.set(i, " = ");
+            }
+        }
+        return comparer;
+    }
+
+    @Override
     public void combinationClear(){
 
         this.tentative.clear();

@@ -18,7 +18,7 @@ public class Menu {
     int taille;
 
 
-    public void displayAvailableGame() {
+    public  void displayAvailableGame() {
         this.affichage(Arrays.asList("Quel mode de jeu voulez-vous choisir ? ", "1. Mode challenger.", "2. Mode défenseur", "3. Mode Duel", "4. Description des modes de jeu", "5.Quitter"));
     }
 
@@ -30,11 +30,11 @@ public class Menu {
                 break;
             case 2:
                 this.affichage(Arrays.asList("Vous avez choisi le mode Défenseur", "----------------------------------------------------------", joueur2.getName() + " vous devez protéger votre combinaison contre " + joueur1.getName()));
-                partie.launchGame(partie.longueur(), joueur2, joueur1, gameChoice);
+                partie.launchGame(partie.longueur(), joueur1, joueur2, gameChoice);
                 break;
             case 3:
                 this.affichage(Arrays.asList("Vous avez choisi le mode Duel", "----------------------------------------------------------", "Vous tentez de deviner la combinaison de l'ordinateur, ", "avant qu'il ne découvre la votre !"));
-                partie.launchDuel(partie.longueur(), joueur1, joueur2, gameChoice);
+                partie.launchGame(partie.longueur(), joueur1, joueur2, gameChoice);
                 break;
             case 4:
                 this.affichage(Arrays.asList("Description des modes de jeu", "challenger : vous essayez de trouver la combinaison de l'ordinateur", "défenseur : L'ordinateur essaie de trouver votre combinaison", "Duel : IA et utlisateur essaient chacun leur tour de trouver en premier la combinaison adverse"));
@@ -63,7 +63,7 @@ public class Menu {
             if (responseIsGood) {
                 responseIsGood = true;
             } else {
-                this.affichage(Arrays.asList("il faut choisir un chiffre entre 1 & 5 ", "----------------------------------------------------------"));
+                this.affichage(Arrays.asList("Il faut choisir un chiffre entre 1 & 5 ", "----------------------------------------------------------"));
                 logger.error("mauvais choix de menu " + gameChoice + " au lieu de 1,2,3,4 ou 5");
                 responseIsGood = false;
                 gameChoice = 0;
@@ -75,7 +75,7 @@ public class Menu {
         return gameChoice;
     }
 
-    public void affichage(List<String> textes) {
+    public static void affichage(List<String> textes) {
         for (String texte : textes) {
             System.out.println(texte);
         }
@@ -83,7 +83,7 @@ public class Menu {
 
     public void cEstParti(int choice, Player joueur1, Player joueur2) {
         String triche = "";
-        this.affichage(Arrays.asList("------------------------------------------------------", "------------------------------------------------------", "Allez c'est parti !! On commence !", "------------------------------------------------------", "Êtes-vous un tricheur ?"));
+        Menu.affichage(Arrays.asList("------------------------------------------------------", "------------------------------------------------------", "Allez c'est parti !! On commence !", "------------------------------------------------------", "Êtes-vous un tricheur ?"));
         Scanner sc = new Scanner(System.in);
         triche = sc.nextLine();
         if (triche.equals("oui")) {

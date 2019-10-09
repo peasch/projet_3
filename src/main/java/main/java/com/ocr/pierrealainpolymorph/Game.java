@@ -3,13 +3,13 @@ package main.java.com.ocr.pierrealainpolymorph;
 import org.apache.log4j.Logger;
 import players.Player;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.*;
 
 import static org.apache.log4j.Logger.getLogger;
 
 public class Game {
+
     private int taille;
     final static Logger logger = getLogger(Game.class);
 
@@ -21,24 +21,29 @@ public class Game {
         this.taille = taille;
     }
 
-    int longueur() throws IOException {
-        Properties prop = new Properties();
-        FileInputStream ip = new FileInputStream("C:/Users/peasc/IdeaProjects/escape-polymorph/src/main/resources/config.properties");
-        prop.load(ip);
-        System.out.println(prop.getProperty("taille"));
+    public int longueur() throws IOException {
         Menu menu = new Menu();
+        String saisie = "";
         boolean choiceIsGood;
         boolean sortir;
         do {
-            menu.affichage(Arrays.asList("Combien de chiffre doit contenir la combinaison ? ", "la combinaison contient " + prop.getProperty("taille") + " chiffres par défaut"));
+            menu.affichage(Arrays.asList(Text.COMBIEN_DE_CHIFFRE_DOIT_CONTENIR_LA_COMBINAISON, "la combinaison contient " + ReadPropertyFile.extractProperties().getProperty("taille") + " chiffres par défaut"));
             choiceIsGood = true;
             try {
                 Scanner sc = new Scanner(System.in);
-                this.setTaille(sc.nextInt());
+                saisie = sc.nextLine();
+                System.out.println(saisie);
+
+
             } catch (InputMismatchException e) {
                 System.out.println("Ce n'est pas une bonne réponse");
                 choiceIsGood = false;
                 logger.error("Il faut choisir un nombre ");
+            }
+            if (saisie.equals("")) {
+                this.setTaille(Integer.parseInt(ReadPropertyFile.extractProperties().getProperty("taille")));
+            } else {
+                this.setTaille(Integer.parseInt(saisie));
             }
             if (choiceIsGood && (this.getTaille() < 10)) {
                 System.out.println("vous avez choisi une combinaison de " + this.getTaille() + " chiffres");
@@ -54,62 +59,56 @@ public class Game {
     }
 
 
-    public void launchGame(int taille, Player attacker, Player defenser, int choice) {
-        int essai = 1;
-        boolean fin;
-        Menu menu = new Menu();
-        attacker.setCompare(attacker.definecompare(taille));
-        defenser.setGoal(defenser.defineGoal(taille));
-        logger.info("Objectif à deviner " + defenser.getGoal());
-        menu.cEstParti(choice, attacker, defenser);
-        do {
-            System.out.println("Essai n° " + essai);
-            int r = this.playerRound(attacker, defenser, essai);
-            essai = essai + 1;
-            fin = this.victory(r, essai, taille, defenser);
-        } while ((essai < 8) && (!fin));
-        this.resetGame(attacker, defenser);
-    }
+    /**
+     * public void launchGame(int taille, Player attacker, Player defenser, int choice) {
+     * int essai = 1;
+     * boolean fin;
+     * Menu menu = new Menu();
+     * attacker.setCompare(attacker.definecompare(taille));
+     * defenser.setGoal(defenser.defineGoal(taille));
+     * logger.info("Objectif à deviner " + defenser.getGoal());
+     * menu.cEstParti(choice, attacker, defenser);
+     * do {
+     * System.out.println("Essai n° " + essai);
+     * int r = this.playerRound(attacker, defenser, essai);
+     * essai = essai + 1;
+     * fin = this.victory(r, essai, taille, defenser);
+     * } while ((essai < 8) && (!fin));
+     * this.resetGame(attacker, defenser);
+     * }
+     */
 
-    public void launchDuel(int taille, Player playerOne, Player playerTwo, int choice) {
+    public void launchGame(int taille, Player playerOne, Player playerTwo, int choice) throws IOException {
         int essai = 1;
         boolean fin1;
         boolean fin2 = false;
         Menu menu = new Menu();
-        this.settingDuel(playerOne, playerTwo);
+        this.settingGame(choice, playerOne, playerTwo);
         menu.cEstParti(choice, playerOne, playerTwo);
-        logger.info("Objectifs à deviner : " + playerOne.getGoal() + " // " + playerTwo.getGoal());
         do {
             System.out.println("Essai n° " + essai);
-            int rP1 = this.playerRound(playerOne, playerTwo, essai);
+            int rP1 = this.playerRound(playerOne, playerTwo, essai, choice);
             fin1 = this.victoryDuel(rP1, taille);
-            if (!fin1) {
-                int rP2 = this.playerRound(playerTwo, playerOne, essai);
-                fin2 = this.victoryDuel(rP2, taille);
+            if (choice == 3) {
+                if (!fin1) {
+                    int rP2 = this.playerRound(playerTwo, playerOne, essai, choice);
+                    fin2 = this.victoryDuel(rP2, taille);
+                }
+            } else if (essai == (Integer.parseInt(ReadPropertyFile.extractProperties().getProperty("nombreEssai")))) {
+                switch (choice) {
+                    case 1:
+                        fin1 = victory(rP1, essai, taille, playerTwo);
+                        break;
+                    case 2:
+                        fin1 = victory(rP1, essai, taille, playerOne);
+                        break;
+                }
             }
             essai += 1;
         } while (!fin1 && !fin2);
         this.resetGame(playerOne, playerTwo);
     }
 
-
-    public List comparison(int taille, List<Integer> tentative, List<Integer> goal) {
-        List<String> comparer = new ArrayList<>();
-        for (int i = 0; i < taille; i++) {
-            comparer.add(" ");
-            Integer a = tentative.get(i);
-            Integer b = goal.get(i);
-            int comparisonresult = a.compareTo(b);
-            if (comparisonresult > 0) {
-                comparer.set(i, " + ");
-            } else if (comparisonresult < 0) {
-                comparer.set(i, " - ");
-            } else if (comparisonresult == 0) {
-                comparer.set(i, " = ");
-            }
-        }
-        return comparer;
-    }
 
     public int symbolEquals(List compare, int xcombi) {
         int r = 0;
@@ -127,7 +126,7 @@ public class Game {
             System.out.println("Félicitations vous avez cassé le code!!!");
             logger.info("Partie gagnée");
             fin = true;
-        } else if (essai == 8) {
+        } else {
             System.out.println("Dommage ! c'est perdu !!");
             System.out.println("La combinaison était : ");
             System.out.println(defenser.getGoal());
@@ -149,12 +148,26 @@ public class Game {
         return fin;
     }
 
-    public void settingDuel(Player joueur1, Player joueur2) {
-        joueur1.setCompare(joueur1.definecompare(taille));
-        joueur2.setCompare(joueur1.getCompare());
-        joueur1.setGoal(joueur1.defineGoal(taille));
-        joueur2.setGoal(joueur2.defineGoal(taille));
-
+    public void settingGame(int choice, Player joueur1, Player joueur2) {
+        switch (choice) {
+            case 1:
+                joueur1.setCompare(joueur1.definecompare(taille));
+                joueur2.setGoal(joueur2.defineGoal(taille));
+                logger.info("Objectifs à deviner : " + joueur2.getGoal());
+                break;
+            case 2:
+                joueur2.setCompare(joueur2.getCompare());
+                joueur1.setGoal(joueur1.defineGoal(taille));
+                logger.info("Objectifs à deviner : " + joueur1.getGoal());
+                break;
+            case 3:
+                joueur1.setCompare(joueur1.definecompare(taille));
+                joueur2.setCompare(joueur1.getCompare());
+                joueur1.setGoal(joueur1.defineGoal(taille));
+                joueur2.setGoal(joueur2.defineGoal(taille));
+                logger.info("Objectifs à deviner : " + joueur1.getGoal() + " // " + joueur2.getGoal());
+                break;
+        }
     }
 
     public void resetGame(Player joueur1, Player joueur2) {
@@ -162,14 +175,38 @@ public class Game {
         joueur2.combinationClear();
     }
 
-    public int playerRound(Player joueur1, Player joueur2, int essai) {
-        System.out.println(joueur1.getName() + " commence :");
-        joueur1.setTentative(joueur1.defineTentative(taille, joueur1.getCompare(), joueur1.getTentative()));
-        System.out.println(joueur1.getTentative());
-        logger.info("Tentative n°" + essai + joueur1.getTentative());
-        joueur1.setCompare(this.comparison(taille, joueur1.getTentative(), joueur2.getGoal()));
-        System.out.println(joueur1.getCompare());
-        int r = this.symbolEquals(joueur1.getCompare(), taille);
+    public int playerRound(Player joueur1, Player joueur2, int essai, int choice) {
+        int r = 0;
+        switch (choice) {
+            case 1:
+                System.out.println(joueur1.getName());
+                joueur1.setTentative(joueur1.defineTentative(taille, joueur1.getCompare(), joueur1.getTentative()));
+                System.out.println(joueur1.getTentative());
+                logger.info("Tentative n°" + essai + joueur1.getTentative());
+                joueur1.setCompare(joueur2.comparison(taille, joueur1.getTentative(), joueur2.getGoal()));
+                System.out.println(joueur1.getCompare());
+                r = this.symbolEquals(joueur1.getCompare(), taille);
+                break;
+            case 2:
+                joueur2.setTentative(joueur2.defineTentative(taille, joueur2.getCompare(), joueur2.getTentative()));
+                System.out.println(joueur2.getTentative());
+                logger.info("Tentative n°" + essai + joueur1.getTentative());
+                joueur2.setCompare(joueur1.comparison(taille, joueur2.getTentative(), joueur1.getGoal()));
+                System.out.println(joueur2.getCompare());
+                r = this.symbolEquals(joueur2.getCompare(), taille);
+                break;
+
+            case 3:
+                System.out.println(joueur1.getName() + " commence :");
+                joueur1.setTentative(joueur1.defineTentative(taille, joueur1.getCompare(), joueur1.getTentative()));
+                System.out.println(joueur1.getTentative());
+                logger.info("Tentative n°" + essai + joueur1.getTentative());
+                joueur1.setCompare(joueur2.comparison(taille, joueur1.getTentative(), joueur2.getGoal()));
+                System.out.println(joueur1.getCompare());
+                r = this.symbolEquals(joueur1.getCompare(), taille);
+                break;
+
+        }
         return r;
     }
 }

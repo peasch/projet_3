@@ -2,12 +2,13 @@ package players;
 
         import org.apache.log4j.Logger;
 
+        import java.io.IOException;
         import java.util.ArrayList;
         import java.util.List;
 
         import static org.apache.log4j.Logger.getLogger;
 
-public abstract class Player {
+public abstract class Player implements PlayerAction{
     final static Logger logger = getLogger(Player.class);
     protected String name;
     protected List<Integer> goal = new ArrayList<Integer>();
@@ -46,10 +47,4 @@ public abstract class Player {
         this.name = name;
     }
 
-    public abstract void defineName();
-
-    public abstract List<Integer> defineGoal(int taille);
-    public abstract List<Integer> defineTentative(int taille, List compare, List tentative);
-    public abstract List<String> definecompare(int taille);
-public abstract void combinationClear();
 }

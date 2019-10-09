@@ -1,17 +1,19 @@
 package players;
 
 
+import main.java.com.ocr.pierrealainpolymorph.Menu;
 import org.apache.log4j.Logger;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.*;
 
 import static org.apache.log4j.Logger.getLogger;
 
 public class Human extends Player {
 
-    final static Logger logger = getLogger(Human.class);
+
+    private final static Logger logger = getLogger(Human.class);
 
     private ArrayList saisiePlayer = new ArrayList<String>();
 
@@ -22,7 +24,6 @@ public class Human extends Player {
     public void setGoal(List<Integer> goal) {
         this.goal = goal;
     }
-
 
 
     public List<Integer> getTentative() {
@@ -43,10 +44,18 @@ public class Human extends Player {
 
 
     @Override
-    public void defineName() {
+    public void defineName() throws IOException {
+        String saisie = "";
+        Properties prop = new Properties();
+        FileInputStream ip = new FileInputStream("C:/Users/peasc/IdeaProjects/escape-polymorph/src/main/resources/config.properties");
+        prop.load(ip);
         System.out.println("Quel est votre pseudo ?");
         Scanner scL = new Scanner(System.in);
-        this.name = scL.nextLine();
+        saisie = scL.nextLine();
+        if (saisie.equals("")) {
+            this.name = (prop.getProperty("utilisateur"));
+        } else
+            this.name = saisie;
 
     }
 
@@ -82,7 +91,7 @@ public class Human extends Player {
 
         } while (saisie == false);
         saisiePlayer.clear();
-       return goal;
+        return goal;
     }
 
     public boolean isInteger(String s) {
@@ -97,7 +106,7 @@ public class Human extends Player {
     }
 
     @Override
-    public  List<Integer> defineTentative (int taille, List compare,List tentative) {
+    public List<Integer> defineTentative(int taille, List compare, List tentative) {
         boolean saisie = false;
         String saisieUser;
         tentative.clear();
@@ -133,19 +142,64 @@ public class Human extends Player {
     }
 
     @Override
-    public List<String> definecompare(int taille){
-        for (int i=0;i<taille;i++){
+    public List<String> comparison(int taille, List<Integer> tentative, List<Integer> goal) {
+        List comparer = new ArrayList();
+        boolean ok = false;
+        int compare = 0;
+        Menu.affichage(Arrays.asList("Comparez la tentative à votre combinaison à deviner : "));
+
+        for (int i = 0; i < taille; i++) {
+            do {
+                System.out.println("------------------------------------------------------------");
+                System.out.println(tentative.get(i));
+                System.out.println(goal.get(i));
+                Menu.affichage(Arrays.asList("------------------------------------------------------------", "la valeur est-elle ? : ", "1. Au dessus ", "2. en dessous", "3. Egale"));
+
+                try {
+                    Scanner sc = new Scanner(System.in);
+                    compare = sc.nextInt();
+                } catch (InputMismatchException e) {
+                    System.out.println("ce n'est pas une bonne réponse");
+                }
+
+                if (compare < 4 && compare > 0) {
+                    ok = true;
+                } else {
+                    System.out.println("Mauvais choix de réponse");
+                    ok = false;
+                }
+            } while (!ok);
+            switch (compare) {
+                case 1:
+                    comparer.add(i, " + ");
+                    break;
+                case 2:
+                    comparer.add(i, " - ");
+                    break;
+                case 3:
+                    comparer.add(i, " = ");
+                    break;
+            }
+        }
+        return comparer;
+    }
+
+
+    @Override
+    public List<String> definecompare(int taille) {
+        for (int i = 0; i < taille; i++) {
             compare.add("x");
         }
         return compare;
     }
 
-    @Override
-    public void combinationClear(){
 
-            this.tentative.clear();
-            this.goal.clear();
-            this.compare.clear();
+    @Override
+    public void combinationClear() {
+
+        this.tentative.clear();
+        this.goal.clear();
+        this.compare.clear();
 
 
     }
