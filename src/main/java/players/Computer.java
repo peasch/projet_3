@@ -1,6 +1,8 @@
 package players;
 
 import main.java.com.ocr.pierrealainpolymorph.Menu;
+import main.java.com.ocr.pierrealainpolymorph.Tentative;
+import main.java.com.ocr.pierrealainpolymorph.Text;
 import org.apache.log4j.Logger;
 
 import java.util.*;
@@ -9,19 +11,20 @@ import static org.apache.log4j.Logger.getLogger;
 
 public class Computer extends Player {
     final static Logger logger = getLogger(Computer.class);
+    public static final String Kmoins = "-";
+    public static final String Kplus = "+";
+    public static final String Kegale = "=";
+
     Menu menu = new Menu();
     int numComputer;
 
-    private List<Integer> memoire = new ArrayList<Integer>();
-
-    private List<Integer> tenta = new ArrayList<Integer>();
 
     @Override
     public void defineName() {
         boolean goodResponse;
         do {
-            System.out.println("Choisissez votre adversaire : ");
-            menu.affichage(Arrays.asList("1. Jon Snow", "2. Bernard Madoff", "3. Franck Ribéry"));
+            System.out.println(Text.CHOISISSEZ_VOTRE_ADVERSAIRE);
+            menu.affichage(Arrays.asList(Text.JON_SNOW1, Text.BERNARD_MADOFF2, Text.FRANCK_RIBERY3));
 
             try {
                 Scanner scHMP = new Scanner(System.in);
@@ -29,7 +32,7 @@ public class Computer extends Player {
                 goodResponse = (numComputer >= 1 && numComputer <= 3);
 
             } catch (InputMismatchException e) {
-                System.out.println("Ce n'est pas une bonne réponse");
+                System.out.println(Text.CE_N_EST_PAS_UNE_BONNE_REPONSE);
                 goodResponse = false;
 
             }
@@ -37,18 +40,18 @@ public class Computer extends Player {
             if (goodResponse) {
                 switch (numComputer) {
                     case 1:
-                        name = "Jon Snow";
+                        name = Text.JON_SNOW;
                         break;
                     case 2:
-                        name = "Bernard Madoff";
+                        name = Text.BERNARD_MADOFF;
                         break;
                     case 3:
-                        name = " Franck Ribéry";
+                        name = Text.FRANCK_RIBERY;
                         break;
                 }
             } else {
-                menu.affichage(Arrays.asList("Il faut choisir un chiffre entre 1 & 3 ", "----------------------------------------------------------"));
-                logger.error("InputMismatchException au lieu de 1,2 ou 3");
+                menu.affichage(Arrays.asList(Text.IL_FAUT_CHOISIR_UN_CHIFFRE_ENTRE_1_3, Text.TRAITS));
+                logger.error(Text.INPUT_MISMATCH_EXCEPTION_AU_LIEU_DE_1_2_OU_3);
             }
         } while (goodResponse == false);
 
@@ -72,28 +75,24 @@ public class Computer extends Player {
 
     }
 
-    @Override
-    public List<Integer> defineTentative(int taille, List compare, List tenta) {
-        if (tenta.size() == 0) {
-            for (int i = 0; i < taille; i++) {
-                tenta.add(smallerThan(10));
-                ;
-            }
-        } else {
-            for (int i = 0; i < taille; i++) {
-                Integer a = (Integer) tenta.get(i);
-                if (compare.get(i) == " - ") {
-                    tenta.set(i, between(a, 9));
-                } else if (compare.get(i) == " + ") {
-                    tenta.set(i, between(0, a));
-                } else if (compare.get(i) == " = ") {
-                    tenta.set(i, a);
-
-                }
-            }
-        }
-        return tenta;
-    }
+    /**
+     * @Override public List<Integer> defineTentative(int taille, Tentative tentaComputer) {
+     * <p>
+     * for (int i = 0; i < taille; i++) {
+     * Integer a = tentaComputer.combi.get(i);
+     * if (compare.get(i) == " - ") {
+     * tenta.set(i, between(a, 9));
+     * } else if (compare.get(i) == " + ") {
+     * tenta.set(i, between(0, a));
+     * } else if (compare.get(i) == " = ") {
+     * tenta.set(i, a);
+     * <p>
+     * }
+     * }
+     * <p>
+     * return tenta;
+     * }
+     */
 
     public int between(int minValue, int maxValue) {
         Random randGen = new Random();
@@ -103,35 +102,19 @@ public class Computer extends Player {
         return randNum;
     }
 
-    @Override
-    public List<String> definecompare(int taille) {
-        for (int i = 0; i < taille; i++) {
-            compare.add("x");
-        }
-        return compare;
-    }
+    /**
+     * @Override public Tentative definecompare(int taille,Tentative tentative) {
+     * for (int i = 0; i < taille; i++) {
+     * <p>
+     * tentative.comparatif.add("x");
+     * }
+     * return tentative;
+     * }
+     */
+
 
     @Override
-    public List<String> comparison(int taille, List<Integer> tentative, List<Integer> goal) {
-        List<String> comparer = new ArrayList<>();
-        for (int i = 0; i < taille; i++) {
-            comparer.add(" ");
-            Integer a = tentative.get(i);
-            Integer b = goal.get(i);
-            int comparisonresult = a.compareTo(b);
-            if (comparisonresult > 0) {
-                comparer.set(i, " + ");
-            } else if (comparisonresult < 0) {
-                comparer.set(i, " - ");
-            } else if (comparisonresult == 0) {
-                comparer.set(i, " = ");
-            }
-        }
-        return comparer;
-    }
-
-    @Override
-    public void combinationClear(){
+    public void combinationClear() {
 
         this.tentative.clear();
         this.goal.clear();
@@ -139,5 +122,45 @@ public class Computer extends Player {
 
 
     }
+
+    @Override
+    public List comparison(int taille, Tentative tentaC, List<Integer> goal) {
+        for (int i = 0; i < taille; i++) {
+            Integer a = tentaC.combi.get(i);
+            Integer b = goal.get(i);
+            int comparisonresult = a.compareTo(b);
+            if (comparisonresult > 0) {
+                tentaC.comparatif.set(i, " + ");
+            } else if (comparisonresult < 0) {
+                tentaC.comparatif.set(i, " - ");
+            } else if (comparisonresult == 0) {
+                tentaC.comparatif.set(i, " = ");
+            }
+        }
+        return tentaC.comparatif;
+    }
+
+
+    @Override
+    public List defineTentative(int taille, Tentative tentatio) {
+
+        for (int i = 0; i < taille; i++) {
+            if (tentatio.combi.get(i) == 11) {
+                tentatio.combi.set(i, smallerThan(10));
+            }else if (tentatio.comparatif.get(i) == " - ") {
+                if((tentatio.borneInf.get(i)+1) < tentatio.borneSup.get(i)){
+                tentatio.borneInf.set(i, (tentatio.combi.get(i)+1));}
+                tentatio.combi.set(i, between(tentatio.borneInf.get(i), tentatio.borneSup.get(i)));
+            } else if (tentatio.comparatif.get(i) == " + ") {
+                if((tentatio.borneSup.get(i)-1) > tentatio.borneInf.get(i)){
+                tentatio.borneSup.set(i, (tentatio.combi.get(i)-1));}
+                tentatio.combi.set(i, between(tentatio.borneInf.get(i), tentatio.borneSup.get(i)));
+            }
+        }
+        return tentatio.combi;
+    }
 }
+
+
+
 

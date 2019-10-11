@@ -4,10 +4,7 @@ import org.apache.log4j.Logger;
 import players.Player;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.InputMismatchException;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 import static org.apache.log4j.Logger.getLogger;
 
@@ -17,30 +14,29 @@ public class Menu {
     Game partie = new Game();
     int taille;
 
-
-    public  void displayAvailableGame() {
-        this.affichage(Arrays.asList("Quel mode de jeu voulez-vous choisir ? ", "1. Mode challenger.", "2. Mode défenseur", "3. Mode Duel", "4. Description des modes de jeu", "5.Quitter"));
+    public void displayAvailableGame() {
+        this.affichage(Arrays.asList(Text.QUEL_MODE_DE_JEU_VOULEZ_VOUS_CHOISIR, Text.MODE_CHALLENGER_1, Text.MODE_DEFENSEUR_2, Text.MODE_DUEL_3, Text.DESCRIPTION_DES_MODES_DE_JEU, Text.QUITTER));
     }
 
     public void displaySelectedGame(int gameChoice, Player joueur1, Player joueur2) throws IOException {
         switch (gameChoice) {
             case 1:
-                this.affichage(Arrays.asList("Vous avez choisi le mode Challenger", "----------------------------------------------------------", joueur1.getName() + " vous essayez de deviner la combinaison de " + joueur2.getName()));
-                partie.launchGame(partie.longueur(), joueur1, joueur2,gameChoice);
+                this.affichage(Arrays.asList(Text.VOUS_AVEZ_CHOISI_LE_MODE_CHALLENGER, Text.TRAITS, joueur1.getName() + Text.VOUS_ESSAYEZ_DE_DEVINER_LA_COMBINAISON_DE + joueur2.getName()));
+                partie.launchGame(partie.longueur(), joueur1, joueur2, gameChoice);
                 break;
             case 2:
-                this.affichage(Arrays.asList("Vous avez choisi le mode Défenseur", "----------------------------------------------------------", joueur2.getName() + " vous devez protéger votre combinaison contre " + joueur1.getName()));
+                this.affichage(Arrays.asList(Text.VOUS_AVEZ_CHOISI_LE_MODE_DEFENSEUR, Text.TRAITS, joueur1.getName() + Text.VOUS_ESSAYEZ_DE_DEVINER_LA_COMBINAISON_DE + joueur2.getName()));
                 partie.launchGame(partie.longueur(), joueur1, joueur2, gameChoice);
                 break;
             case 3:
-                this.affichage(Arrays.asList("Vous avez choisi le mode Duel", "----------------------------------------------------------", "Vous tentez de deviner la combinaison de l'ordinateur, ", "avant qu'il ne découvre la votre !"));
+                this.affichage(Arrays.asList(Text.VOUS_AVEZ_CHOISI_LE_MODE_DUEL, Text.TRAITS, Text.VOUS_TENTEZ_DE_DEVINER_LA_COMBINAISON_DE_L_ORDINATEUR_AVANT_QU_IL_NE_DECOUVRE_LA_VOTRE));
                 partie.launchGame(partie.longueur(), joueur1, joueur2, gameChoice);
                 break;
             case 4:
-                this.affichage(Arrays.asList("Description des modes de jeu", "challenger : vous essayez de trouver la combinaison de l'ordinateur", "défenseur : L'ordinateur essaie de trouver votre combinaison", "Duel : IA et utlisateur essaient chacun leur tour de trouver en premier la combinaison adverse"));
+                this.affichage(Arrays.asList(Text.DESCRIPTION_DES_MODES_DE_JEU1, Text.CHALLENGER_VOUS_ESSAYEZ_DE_TROUVER_LA_COMBINAISON_DE_L_ORDINATEUR, Text.DEFENSEUR_L_ORDINATEUR_ESSAIE_DE_TROUVER_VOTRE_COMBINAISON, Text.DUEL_IA_ET_UTLISATEUR_ESSAIENT_CHACUN_LEUR_TOUR_DE_TROUVER_EN_PREMIER_LA_COMBINAISON_ADVERSE));
                 break;
             case 5:
-                System.out.println("Au revoir et à bientôt !");
+                System.out.println(Text.AU_REVOIR);
                 break;
 
         }
@@ -57,14 +53,14 @@ public class Menu {
                 responseIsGood = (gameChoice >= 1 && gameChoice <= 5);
 
             } catch (InputMismatchException e) {
-                System.out.println("ce n'est pas une bonne réponse");
+                Menu.affichage(Collections.singletonList(Text.CE_N_EST_PAS_UNE_BONNE_REPONSE));
                 responseIsGood = false;
             }
             if (responseIsGood) {
                 responseIsGood = true;
             } else {
-                this.affichage(Arrays.asList("Il faut choisir un chiffre entre 1 & 5 ", "----------------------------------------------------------"));
-                logger.error("mauvais choix de menu " + gameChoice + " au lieu de 1,2,3,4 ou 5");
+                this.affichage(Arrays.asList(Text.IL_FAUT_CHOISIR_UN_CHIFFRE_ENTRE_1_5, Text.TRAITS));
+                logger.error(Text.CE_N_EST_PAS_UNE_BONNE_REPONSE + gameChoice + Text.AU_LIEU_DE_1_2_3_4_OU_5);
                 responseIsGood = false;
                 gameChoice = 0;
 
@@ -83,17 +79,18 @@ public class Menu {
 
     public void cEstParti(int choice, Player joueur1, Player joueur2) {
         String triche = "";
-        Menu.affichage(Arrays.asList("------------------------------------------------------", "------------------------------------------------------", "Allez c'est parti !! On commence !", "------------------------------------------------------", "Êtes-vous un tricheur ?"));
+        Menu.affichage(Arrays.asList(Text.TRAITS, Text.ALLEZ_C_EST_PARTI_ON_COMMENCE, Text.ETES_VOUS_UN_TRICHEUR));
         Scanner sc = new Scanner(System.in);
         triche = sc.nextLine();
         if (triche.equals("oui")) {
             if (choice < 3) {
                 System.out.println(joueur2.getGoal());
 
-                logger.info("mode tricheur activé");
-            } else{
+                logger.info(Text.MODE_TRICHEUR_ACTIVE);
+            } else {
                 System.out.println(joueur1.getGoal());
-            System.out.println(joueur2.getGoal());}
+                System.out.println(joueur2.getGoal());
+            }
         }
     }
 
@@ -103,74 +100,31 @@ public class Menu {
         Boolean sortir;
 
         do {
-            this.affichage(Arrays.asList("voulez-vous refaire une partie ?", " oui ||  non"));
+            this.affichage(Arrays.asList(Text.VOULEZ_VOUS_REFAIRE_UNE_PARTIE, Text.OUI_NON));
 
             try {
                 Scanner sc = new Scanner(System.in);
                 encore = sc.nextLine();
 
             } catch (InputMismatchException e) {
-                System.out.println("ce n'est pas une bonne réponse");
+                System.out.println(Text.CE_N_EST_PAS_UNE_BONNE_REPONSE);
                 sortir = false;
-                logger.error("mauvaise saisie de réponse pour continuer, oui ou non");
+                logger.error(Text.MAUVAISE_SAISIE_DE_REPONSE_POUR_CONTINUER_OUI_OU_NON);
             }
             if (encore.equals("oui")) {
                 sortir = true;
                 continuer = true;
-                logger.info("partie continuée");
+                logger.info(Text.PARTIE_CONTINUEE);
             } else {
-                System.out.println("Au revoir et à bientôt !!!");
+                System.out.println(Text.AU_REVOIR);
                 encore = null;
                 continuer = false;
                 sortir = true;
-                logger.info(" Partie terminée");
+                logger.info(Text.PARTIE_TERMINEE);
             }
         } while (sortir == false);
         return continuer;
     }
-
-    /** public void howMuchPlayer(Player joueur1, Player joueur2) {
-     boolean goodResponse = false;
-     int numberPlayer = 0;
-     do {
-     this.affichage(Arrays.asList("Voulez vous jouer : ", "1. Contre l'ordinateur", "2. Contre un autre joueur"));
-     try {
-     Scanner scHMP = new Scanner(System.in);
-     numberPlayer = scHMP.nextInt();
-     } catch (InputMismatchException e) {
-     System.out.println("ce n'est pas une bonne réponse");
-     }
-     goodResponse = (numberPlayer >= 1 && numberPlayer <= 2);
-     } while (goodResponse == false);
-     if (goodResponse) {
-     switch (numberPlayer) {
-     case 1:
-     joueur1 = new Human();
-     joueur2 = new Computer();
-     joueur1.defineName();
-     logger.info("nom joueur 1 :" + joueur1.getName() + " contre l'ordinateur");
-     joueur2.defineName();
-     break;
-     case 2:
-     joueur1 = new Human();
-     joueur2 = new Human();
-     System.out.print("joueur 1 : ");
-     joueur1.defineName();
-     System.out.print("joueur 2 : ");
-     joueur2.defineName();
-     logger.info("nom joueur 1 : " + joueur1.getName() + " contre joueur 2 : " + joueur2.getName());
-     break;
-     }
-
-     } else {
-     this.affichage(Arrays.asList("il faut choisir un chiffre entre 1 & 2 ", "----------------------------------------------------------"));
-     logger.error("InputMismatchException au lieu de 1 ou 2");
-
-
-     }
-
-
-     }*/
 
 
 }

@@ -6,18 +6,20 @@ import players.Human;
 import players.Player;
 
 import java.io.IOException;
+import java.util.Collections;
 
 import static org.apache.log4j.Logger.getLogger;
 
 public class Main {
     private final static Logger logger = getLogger(Main.class);
 
+
     public static void main(String[] args) throws IOException {
         Menu menu = new Menu();
         Player joueur1 = new Human();
         Player joueur2 = new Computer();
         logger.info("--------------------------------------------------------------------------");
-        System.out.println("bienvenue dans le jeu");
+        Menu.affichage(Collections.singletonList(Text.BIENVENUE_DANS_LE_JEU));
         Boolean continuer = true;
         joueur1.defineName();
         joueur2.defineName();

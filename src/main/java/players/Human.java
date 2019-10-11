@@ -2,6 +2,8 @@ package players;
 
 
 import main.java.com.ocr.pierrealainpolymorph.Menu;
+import main.java.com.ocr.pierrealainpolymorph.Tentative;
+import main.java.com.ocr.pierrealainpolymorph.Text;
 import org.apache.log4j.Logger;
 
 import java.io.FileInputStream;
@@ -14,7 +16,6 @@ public class Human extends Player {
 
 
     private final static Logger logger = getLogger(Human.class);
-
     private ArrayList saisiePlayer = new ArrayList<String>();
 
     public List<Integer> getGoal() {
@@ -34,14 +35,6 @@ public class Human extends Player {
         this.tentative = tentative;
     }
 
-    public List<String> getCompare() {
-        return compare;
-    }
-
-    public void setCompare(List<String> compare) {
-        this.compare = compare;
-    }
-
 
     @Override
     public void defineName() throws IOException {
@@ -49,7 +42,7 @@ public class Human extends Player {
         Properties prop = new Properties();
         FileInputStream ip = new FileInputStream("C:/Users/peasc/IdeaProjects/escape-polymorph/src/main/resources/config.properties");
         prop.load(ip);
-        System.out.println("Quel est votre pseudo ?");
+        Menu.affichage(Collections.singletonList(Text.QUEL_EST_VOTRE_PSEUDO));
         Scanner scL = new Scanner(System.in);
         saisie = scL.nextLine();
         if (saisie.equals("")) {
@@ -65,7 +58,7 @@ public class Human extends Player {
         boolean saisie;
         String saisieUser;
         do {
-            System.out.println("Veuillez saisir votre combinaison !( " + taille + " chiffres)");
+            Menu.affichage(Arrays.asList(Text.VEUILLEZ_SAISIR_VOTRE_COMBINAISON, " !( " + taille + Text.CHIFFRES + ")"));
             Scanner sc = new Scanner(System.in);
             saisieUser = sc.nextLine();
             for (int i = 0; i < taille; i++) {
@@ -73,7 +66,7 @@ public class Human extends Player {
             }
             if (this.isInteger(saisieUser)) {
                 if (saisieUser.length() != taille) {
-                    System.out.println("la combinaison ne fait pas la bonne taille");
+                    Menu.affichage(Collections.singletonList(Text.LA_COMBINAISON_NE_FAIT_PAS_LA_BONNE_TAILLE));
                     saisiePlayer.clear();
                     saisie = false;
                 } else {
@@ -83,8 +76,8 @@ public class Human extends Player {
                     saisie = true;
                 }
             } else {
-                System.out.println("il faut saisir une combinaison de chiffres");
-                logger.error(" combinaison /chiffres" + saisiePlayer);
+                Menu.affichage(Collections.singletonList(Text.IL_FAUT_SAISIR_UNE_COMBINAISON_DE_CHIFFRES));
+                logger.error(" combinaison /" + Text.CHIFFRES + saisiePlayer);
                 saisie = false;
                 saisiePlayer.clear();
             }
@@ -99,108 +92,115 @@ public class Human extends Player {
         try {
             Integer.parseInt(s);
         } catch (NumberFormatException e) {
-            logger.error("ce ne sont pas des chiffres");
+            logger.error("ce ne sont pas des " + Text.CHIFFRES);
             return false;
         }
         return true;
     }
 
     @Override
-    public List<Integer> defineTentative(int taille, List compare, List tentative) {
-        boolean saisie = false;
+    public List defineTentative(int taille, Tentative tentaHumain) {
+        boolean saisie;
         String saisieUser;
-        tentative.clear();
+
         do {
-            System.out.println("Veuillez saisir votre combinaison !( " + taille + " chiffres)");
+            Menu.affichage(Arrays.asList(Text.VEUILLEZ_SAISIR_VOTRE_COMBINAISON + taille + Text.CHIFFRES));
             Scanner sc = new Scanner(System.in);
             saisieUser = sc.nextLine();
             for (int i = 0; i < taille; i++) {
                 saisiePlayer.add(saisieUser.charAt(i));
             }
-
             if (isInteger(saisieUser)) {
                 if (saisieUser.length() != taille) {
-                    System.out.println("la combinaison ne fait pas la bonne taille");
+                    Menu.affichage(Collections.singletonList(Text.LA_COMBINAISON_NE_FAIT_PAS_LA_BONNE_TAILLE));
                     logger.error("Mauvaise taille de combinaison");
                     saisie = false;
                 } else {
                     for (int i = 0; i < saisieUser.length(); i++) {
-                        tentative.add(Integer.parseInt(String.valueOf(saisiePlayer.get(i))));
+                        tentaHumain.combi.set(i, Integer.parseInt(String.valueOf(saisiePlayer.get(i))));
                     }
                     saisie = true;
                 }
             } else {
-                System.out.println("il faut saisir une combinaison de chiffres");
-                logger.error("saisie /chiffres");
+                Menu.affichage(Collections.singletonList(Text.IL_FAUT_SAISIR_UNE_COMBINAISON_DE_CHIFFRES));
+                logger.error("saisie /" + Text.CHIFFRES);
                 saisie = false;
                 saisiePlayer.clear();
             }
         } while (saisie == false);
         saisiePlayer.clear();
-        saisieUser = null;
-        return tentative;
+        return tentaHumain.combi;
     }
 
     @Override
-    public List<String> comparison(int taille, List<Integer> tentative, List<Integer> goal) {
+    public List comparison(int taille, Tentative tentaH, List<Integer> goal) {
         List comparer = new ArrayList();
         boolean ok = false;
-        int compare = 0;
-        Menu.affichage(Arrays.asList("Comparez la tentative à votre combinaison à deviner : "));
+        int comparo = 0;
+        Menu.affichage(Arrays.asList(Text.COMPAREZ_LA_TENTATIVE_A_VOTRE_COMBINAISON_A_DEVINER));
 
         for (int i = 0; i < taille; i++) {
             do {
-                System.out.println("------------------------------------------------------------");
-                System.out.println(tentative.get(i));
+                System.out.println(Text.TRAITS);
+                System.out.println(tentaH.combi.get(i));
                 System.out.println(goal.get(i));
-                Menu.affichage(Arrays.asList("------------------------------------------------------------", "la valeur est-elle ? : ", "1. Au dessus ", "2. en dessous", "3. Egale"));
+                Menu.affichage(Arrays.asList(Text.TRAITS, Text.LA_VALEUR_EST_ELLE, Text.EN_DESSOUS));
 
                 try {
                     Scanner sc = new Scanner(System.in);
-                    compare = sc.nextInt();
+                    comparo = sc.nextInt();
                 } catch (InputMismatchException e) {
-                    System.out.println("ce n'est pas une bonne réponse");
+                    System.out.println(Text.CE_N_EST_PAS_UNE_BONNE_REPONSE);
                 }
 
-                if (compare < 4 && compare > 0) {
+                if (comparo < 4 && comparo > 0) {
                     ok = true;
                 } else {
-                    System.out.println("Mauvais choix de réponse");
+                    System.out.println(Text.CE_N_EST_PAS_UNE_BONNE_REPONSE);
                     ok = false;
                 }
             } while (!ok);
-            switch (compare) {
+            switch (comparo) {
+
                 case 1:
-                    comparer.add(i, " + ");
+                    if (tentaH.comparatif.size() == taille) {
+                        tentaH.comparatif.set(i, " - ");
+                    } else
+                        tentaH.comparatif.add(i, " - ");
+
                     break;
                 case 2:
-                    comparer.add(i, " - ");
+                    if (tentaH.comparatif.size() == taille) {
+                        tentaH.comparatif.set(i, " = ");
+                    } else
+                        tentaH.comparatif.add(i, " = ");
                     break;
                 case 3:
-                    comparer.add(i, " = ");
+                    if (tentaH.comparatif.size() == taille) {
+                        tentaH.comparatif.set(i, " + ");
+                    } else
+                        tentaH.comparatif.add(i, " + ");
                     break;
             }
         }
-        return comparer;
+        return tentaH.comparatif;
     }
 
 
-    @Override
-    public List<String> definecompare(int taille) {
-        for (int i = 0; i < taille; i++) {
-            compare.add("x");
-        }
-        return compare;
-    }
-
+    /**
+     * @Override public Tentative definecompare(int taille,Tentative tentative) {
+     * for (int i = 0; i < taille; i++) {
+     * tentative.comparatif.add("x");
+     * }
+     * return tentative;
+     * }
+     */
 
     @Override
     public void combinationClear() {
-
         this.tentative.clear();
         this.goal.clear();
         this.compare.clear();
-
-
     }
+
 }

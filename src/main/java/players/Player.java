@@ -2,9 +2,10 @@ package players;
 
         import org.apache.log4j.Logger;
 
-        import java.io.IOException;
         import java.util.ArrayList;
+        import java.util.HashMap;
         import java.util.List;
+        import java.util.Map;
 
         import static org.apache.log4j.Logger.getLogger;
 
@@ -13,6 +14,8 @@ public abstract class Player implements PlayerAction{
     protected String name;
     protected List<Integer> goal = new ArrayList<Integer>();
     protected List<Integer> tentative = new ArrayList<Integer>();
+    protected List<Integer> memoire = new ArrayList<>();
+    protected List<String> compare = new ArrayList<>();
 
     public List<String> getCompare() {
         return compare;
@@ -22,7 +25,6 @@ public abstract class Player implements PlayerAction{
         this.compare = compare;
     }
 
-    protected List<String> compare = new ArrayList<String>();
     public List<Integer> getGoal() {
         return goal;
     }
@@ -47,4 +49,11 @@ public abstract class Player implements PlayerAction{
         this.name = name;
     }
 
+    public List<Integer> getMemoire() {
+        return memoire;
+    }
+
+    public void setMemoire(List<Integer> memoire) {
+        this.memoire = memoire;
+    }
 }
