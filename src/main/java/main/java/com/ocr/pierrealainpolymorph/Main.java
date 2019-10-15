@@ -19,7 +19,7 @@ public class Main {
         Player joueur1 = new Human();
         Player joueur2 = new Computer();
         logger.info("--------------------------------------------------------------------------");
-        Menu.affichage(Collections.singletonList(Text.BIENVENUE_DANS_LE_JEU));
+        Text.affichage(Collections.singletonList(Text.BIENVENUE_DANS_LE_JEU));
         Boolean continuer = true;
         joueur1.defineName();
         joueur2.defineName();

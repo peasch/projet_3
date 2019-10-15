@@ -16,6 +16,8 @@ public class Human extends Player {
 
 
     private final static Logger logger = getLogger(Human.class);
+
+
     private ArrayList saisiePlayer = new ArrayList<String>();
 
     public List<Integer> getGoal() {
@@ -42,7 +44,8 @@ public class Human extends Player {
         Properties prop = new Properties();
         FileInputStream ip = new FileInputStream("C:/Users/peasc/IdeaProjects/escape-polymorph/src/main/resources/config.properties");
         prop.load(ip);
-        Menu.affichage(Collections.singletonList(Text.QUEL_EST_VOTRE_PSEUDO));
+        Text.affichage(Collections.singletonList(Text.QUEL_EST_VOTRE_PSEUDO));
+        Text.showString(Text.VOTRE_SAISIE_ENTER);
         Scanner scL = new Scanner(System.in);
         saisie = scL.nextLine();
         if (saisie.equals("")) {
@@ -58,15 +61,24 @@ public class Human extends Player {
         boolean saisie;
         String saisieUser;
         do {
-            Menu.affichage(Arrays.asList(Text.VEUILLEZ_SAISIR_VOTRE_COMBINAISON, " !( " + taille + Text.CHIFFRES + ")"));
+            Text.affichage(Arrays.asList(Text.VEUILLEZ_SAISIR_VOTRE_COMBINAISON + taille + Text.CHIFFRES ));
+            Text.showString(Text.VOTRE_SAI_ENTER);
             Scanner sc = new Scanner(System.in);
             saisieUser = sc.nextLine();
-            for (int i = 0; i < taille; i++) {
-                saisiePlayer.add(saisieUser.charAt(i));
+            try{
+                for (int i = 0; i < taille; i++) {
+                    saisiePlayer.add(saisieUser.charAt(i));
+
+                }
+            }catch (StringIndexOutOfBoundsException e) {
+                logger.error(Text.LA_COMBINAISON_NE_FAIT_PAS_LA_BONNE_TAILLE);
+                Text.showString(Text.LA_COMBINAISON_NE_FAIT_PAS_LA_BONNE_TAILLE);
+                saisie=false;
             }
+
             if (this.isInteger(saisieUser)) {
                 if (saisieUser.length() != taille) {
-                    Menu.affichage(Collections.singletonList(Text.LA_COMBINAISON_NE_FAIT_PAS_LA_BONNE_TAILLE));
+                    Text.showString(Text.LA_COMBINAISON_NE_FAIT_PAS_LA_BONNE_TAILLE);
                     saisiePlayer.clear();
                     saisie = false;
                 } else {
@@ -76,13 +88,13 @@ public class Human extends Player {
                     saisie = true;
                 }
             } else {
-                Menu.affichage(Collections.singletonList(Text.IL_FAUT_SAISIR_UNE_COMBINAISON_DE_CHIFFRES));
+                Text.affichage(Collections.singletonList(Text.IL_FAUT_SAISIR_UNE_COMBINAISON_DE_CHIFFRES));
                 logger.error(" combinaison /" + Text.CHIFFRES + saisiePlayer);
                 saisie = false;
                 saisiePlayer.clear();
             }
 
-        } while (saisie == false);
+        } while (!saisie);
         saisiePlayer.clear();
         return goal;
     }
@@ -99,20 +111,22 @@ public class Human extends Player {
     }
 
     @Override
-    public List defineTentative(int taille, Tentative tentaHumain) {
+    public List<Integer> defineTentative(int taille, Tentative tentaHumain) {
         boolean saisie;
         String saisieUser;
-
         do {
-            Menu.affichage(Arrays.asList(Text.VEUILLEZ_SAISIR_VOTRE_COMBINAISON + taille + Text.CHIFFRES));
+            Text.affichage(Arrays.asList(Text.VEUILLEZ_SAISIR_VOTRE_COMBINAISON + taille + Text.CHIFFRES));
+            Text.showString(Text.VOTRE_SAI_ENTER);
             Scanner sc = new Scanner(System.in);
             saisieUser = sc.nextLine();
             for (int i = 0; i < taille; i++) {
                 saisiePlayer.add(saisieUser.charAt(i));
             }
+
+
             if (isInteger(saisieUser)) {
                 if (saisieUser.length() != taille) {
-                    Menu.affichage(Collections.singletonList(Text.LA_COMBINAISON_NE_FAIT_PAS_LA_BONNE_TAILLE));
+                    Text.affichage(Collections.singletonList(Text.LA_COMBINAISON_NE_FAIT_PAS_LA_BONNE_TAILLE));
                     logger.error("Mauvaise taille de combinaison");
                     saisie = false;
                 } else {
@@ -122,29 +136,30 @@ public class Human extends Player {
                     saisie = true;
                 }
             } else {
-                Menu.affichage(Collections.singletonList(Text.IL_FAUT_SAISIR_UNE_COMBINAISON_DE_CHIFFRES));
+                Text.affichage(Collections.singletonList(Text.IL_FAUT_SAISIR_UNE_COMBINAISON_DE_CHIFFRES));
                 logger.error("saisie /" + Text.CHIFFRES);
                 saisie = false;
                 saisiePlayer.clear();
             }
-        } while (saisie == false);
+        } while (!saisie);
         saisiePlayer.clear();
         return tentaHumain.combi;
     }
 
     @Override
-    public List comparison(int taille, Tentative tentaH, List<Integer> goal) {
+    public List<String> comparison(int taille, Tentative tentaH, List<Integer> goal) {
         List comparer = new ArrayList();
         boolean ok = false;
         int comparo = 0;
-        Menu.affichage(Arrays.asList(Text.COMPAREZ_LA_TENTATIVE_A_VOTRE_COMBINAISON_A_DEVINER));
+        Text.affichage(Arrays.asList(Text.COMPAREZ_LA_TENTATIVE_A_VOTRE_COMBINAISON_A_DEVINER));
 
         for (int i = 0; i < taille; i++) {
             do {
                 System.out.println(Text.TRAITS);
                 System.out.println(tentaH.combi.get(i));
                 System.out.println(goal.get(i));
-                Menu.affichage(Arrays.asList(Text.TRAITS, Text.LA_VALEUR_EST_ELLE, Text.EN_DESSOUS));
+                Text.affichage(Arrays.asList(Text.TRAITS, Text.LA_VALEUR_EST_ELLE, Text.EN_DESSOUS));
+                Text.showString(Text.VOTRE_SAI_ENTER);
 
                 try {
                     Scanner sc = new Scanner(System.in);
@@ -185,16 +200,6 @@ public class Human extends Player {
         }
         return tentaH.comparatif;
     }
-
-
-    /**
-     * @Override public Tentative definecompare(int taille,Tentative tentative) {
-     * for (int i = 0; i < taille; i++) {
-     * tentative.comparatif.add("x");
-     * }
-     * return tentative;
-     * }
-     */
 
     @Override
     public void combinationClear() {
