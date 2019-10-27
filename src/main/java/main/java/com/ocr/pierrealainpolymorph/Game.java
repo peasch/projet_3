@@ -13,7 +13,8 @@ import static org.apache.log4j.Logger.getLogger;
 public class Game {
 
 
-
+    public static final String MALHEUREUSEMENT = "Malheureusement, ";
+    public static final String A_CASSE_VOTRE_CODE = " a cassé votre code !";
     private int taille;
     final static Logger logger = getLogger(Game.class);
 
@@ -49,7 +50,7 @@ public class Game {
                 this.setTaille(saisieNumber);
             }
             if (choiceIsGood && (this.getTaille() < 10)) {
-                Text.affichage(Collections.singletonList(Text.VOUS_AVEZ_CHOISI_UNE_COMBINAISON_DE + this.getTaille() + Text.CHIFFRES));
+                Text.showString(Text.VOUS_AVEZ_CHOISI_UNE_COMBINAISON_DE + this.getTaille() + Text.CHIFFRES);
                 logger.info("combinaison de " + this.getTaille() + " chiffres");
                 sortir = true;
             } else {
@@ -64,7 +65,7 @@ public class Game {
 
     public void launchGame(int taille, Player playerOne, Player playerTwo, int choice) throws IOException {
         int essai = 1;
-        boolean fin1;
+        boolean fin1 = false;
         boolean fin2 = false;
         boolean modeDev;
         Menu menu = new Menu();
@@ -74,21 +75,12 @@ public class Game {
         modeDev = menu.cEstParti(choice, playerOne, playerTwo);
         do {
             Text.showString(Text.ESSAI_N + essai);
-            int rP1 = this.playerRound(playerOne, playerTwo, essai, choice, tentaJ1, tentaJ2, modeDev);
-            fin1 = this.victory(rP1, taille,playerTwo,essai,nbTry);
+            int rP1 = this.playerRound(playerOne, playerTwo, essai, choice, tentaJ2, modeDev);
+                fin1 = victory(rP1, taille, playerTwo, playerOne, essai, nbTry, choice);
             if (choice == 3) {
                 if (!fin1) {
-                    int rP2 = this.playerRound(playerTwo, playerOne, essai, choice, tentaJ2, tentaJ1, modeDev);
+                    int rP2 = this.playerRound(playerTwo, playerOne, essai, choice, tentaJ1, modeDev);
                     fin2 = this.victoryDuel(rP2, taille);
-                }
-            } else if (essai == nbTry) {
-                switch (choice) {
-                    case 1:
-                        fin1 = victory(rP1, taille, playerTwo,essai, nbTry);
-                        break;
-                    case 2:
-                        fin1 = victory(rP1, taille, playerOne,essai,nbTry);
-                        break;
                 }
             }
             essai += 1;
@@ -108,17 +100,25 @@ public class Game {
         return r;
     }
 
-    private Boolean victory(int r, int taille, Player defenser,int essai, int nbEssai) {
+    private Boolean victory(int r, int taille, Player defenser,Player attacker, int essai, int nbEssai,int choice) {
         boolean fin = false;
         if (r == taille) {
-            Text.affichage(Collections.singletonList(Text.FELICITATIONS_VOUS_AVEZ_CASSE_LE_CODE));
+            switch (choice){
+                case 1:
+                case 3:
+                    Text.showString(Text.FELICITATIONS_VOUS_AVEZ_CASSE_LE_CODE);
+                    break;
+                case 2:
+                    Text.showString((MALHEUREUSEMENT + attacker.getName()+ A_CASSE_VOTRE_CODE));
+                    break;
+            }
             logger.info(Text.PARTIE_GAGNEE);
-            fin=true;
-        } else if (essai==nbEssai){
+            fin = true;
+        } else if (essai == nbEssai && choice!=3) {
             Text.affichage(Arrays.asList(Text.DOMMAGE_C_EST_PERDU, Text.LA_COMBINAISON_ETAIT));
             Text.showString(defenser.getGoal().toString());
             logger.info(Text.PARTIE_PERDUE);
-            fin=true;
+            fin = true;
         }
         return fin;
     }
@@ -135,24 +135,19 @@ public class Game {
     }
 
     public int settingGame(int choice, Player joueur1, Player joueur2, Tentative tentaJ1, Tentative tentaJ2) throws IOException {
-        int nbEssai=(Integer.parseInt(ReadPropertyFile.extractProperties().getProperty("nombreEssai")));
-        switch (choice) {
-            case 1:
-               nbEssai=this.nombreDessais();
-                joueur2.setGoal(joueur2.defineGoal(taille));
-                logger.info(Text.OBJECTIFS_A_DEVINER + joueur2.getGoal());
-                break;
-            case 2:
-               nbEssai=this.nombreDessais();
-                joueur1.setGoal(joueur1.defineGoal(taille));
-                logger.info(Text.OBJECTIFS_A_DEVINER + joueur1.getGoal());
-                break;
-            case 3:
-                joueur1.setGoal(joueur1.defineGoal(taille));
-                joueur2.setGoal(joueur2.defineGoal(taille));
-                logger.info(Text.OBJECTIFS_A_DEVINER + joueur1.getGoal() + " // " + joueur2.getGoal());
-                break;
+        int nbEssai = (Integer.parseInt(ReadPropertyFile.extractProperties().getProperty("nombreEssai")));
+        if (choice !=3){
+            nbEssai = this.nombreDessais();
+        }else {
+            nbEssai=99;
         }
+        joueur2.setGoal(joueur2.defineGoal(taille));
+        logger.info(Text.OBJECTIFS_A_DEVINER + joueur2.getGoal());
+        if (choice == 3) {
+            joueur1.setGoal(joueur1.defineGoal(taille));
+            logger.info(Text.OBJECTIFS_A_DEVINER + joueur1.getGoal() + " // " + joueur2.getGoal());
+        }
+
         for (int i = 0; i < taille; i++) {
             tentaJ1.comparatif.add(i, "x");
             tentaJ1.combi.add(i, 11);
@@ -171,59 +166,68 @@ public class Game {
         joueur2.combinationClear();
     }
 
-    public int playerRound(Player joueur1, Player joueur2, int essai, int choice, Tentative tentaJ1, Tentative tentaJ2, boolean modeDev) {
+    public int playerRound(Player joueur1, Player joueur2, int essai, int choice, Tentative tentaJ2, boolean modeDev) {
         int r = 0;
-        switch (choice) {
-            case 1:
-                Text.showString(joueur1.getName());
-                if (modeDev) {
-                    Text.showString(Text.MODE_DEVELOPPEUR + joueur2.getGoal().toString());
-                }
-                joueur1.setTentative(joueur1.defineTentative(taille, tentaJ1));
-                Text.showString(joueur1.getTentative().toString());
-                logger.info(Text.TENTATIVE_N + essai + joueur1.getTentative());
-                tentaJ1.setComparatif(joueur2.comparison(taille, tentaJ1, joueur2.getGoal()));
-                Text.showString(tentaJ1.getComparatif().toString());
-                r = this.symbolEquals(tentaJ1, taille);
-                break;
-            case 2:
-                if (modeDev) {
-                    Text.showString(Text.MODE_DEVELOPPEUR + joueur1.getGoal().toString());
-                }
-                joueur2.setTentative(joueur2.defineTentative(taille, tentaJ2));
-                Text.showString(joueur2.getTentative().toString());
-                logger.info(Text.TENTATIVE_N + essai + joueur2.getTentative());
-                joueur2.setCompare(joueur1.comparison(taille, tentaJ2, joueur1.getGoal()));
-                Text.showString(joueur2.getCompare().toString());
-                r = this.symbolEquals(tentaJ2, taille);
-                break;
-
-            case 3:
-                Text.showString(joueur1.getName() + Text.COMMENCE);
-               if (joueur1.getTentative().size()!=0) {
-                   Text.showString(Text.TENTATIVE_ET_RÉSULTAT_PRÉCÉDENTS);
-                   Text.showString(joueur1.getTentative().toString());
-                   Text.showString(tentaJ1.getComparatif().toString());
-                   Text.showString(Text.TRAITS);
-               }
-                if (modeDev) {
-                    Text.showString(Text.MODE_DEVELOPPEUR + joueur2.getGoal().toString());
-                }
-                joueur1.setTentative(joueur1.defineTentative(taille, tentaJ1));
-                Text.showString(joueur1.getTentative().toString());
-                logger.info(Text.TENTATIVE_N + essai + joueur1.getTentative());
-                tentaJ1.setComparatif(joueur2.comparison(taille, tentaJ1, joueur2.getGoal()));
-                Text.showString(tentaJ1.getComparatif().toString());
-                r = this.symbolEquals(tentaJ1, taille);
-                break;
-
+        if (modeDev) {
+            Text.showString(Text.MODE_DEVELOPPEUR + joueur2.getGoal().toString());
         }
+        joueur1.setTentative(joueur1.defineTentative(taille, tentaJ2));
+        Text.showString(joueur1.getTentative().toString());
+        logger.info(Text.TENTATIVE_N + essai + joueur1.getTentative());
+        tentaJ2.setComparatif(joueur2.comparison(taille, tentaJ2, joueur2.getGoal()));
+        Text.showString(tentaJ2.getComparatif().toString());
+        r = this.symbolEquals(tentaJ2, taille);
+        /** switch (choice) {
+         case 1:
+         Text.showString(joueur1.getName());
+         if (modeDev) {
+         Text.showString(Text.MODE_DEVELOPPEUR + joueur2.getGoal().toString());
+         }
+         joueur1.setTentative(joueur1.defineTentative(taille, tentaJ1));
+         Text.showString(joueur1.getTentative().toString());
+         logger.info(Text.TENTATIVE_N + essai + joueur1.getTentative());
+         tentaJ1.setComparatif(joueur2.comparison(taille, tentaJ1, joueur2.getGoal()));
+         Text.showString(tentaJ1.getComparatif().toString());
+         r = this.symbolEquals(tentaJ1, taille);
+         break;
+         case 2:
+         if (modeDev) {
+         Text.showString(Text.MODE_DEVELOPPEUR + joueur1.getGoal().toString());
+         }
+         joueur2.setTentative(joueur2.defineTentative(taille, tentaJ2));
+         Text.showString(joueur2.getTentative().toString());
+         logger.info(Text.TENTATIVE_N + essai + joueur2.getTentative());
+         tentaJ2.setComparatif(joueur1.comparison(taille, tentaJ2, joueur1.getGoal()));
+         Text.showString(tentaJ2.getComparatif().toString());
+         r = this.symbolEquals(tentaJ2, taille);
+         break;
+
+         case 3:
+         Text.showString(joueur1.getName() + Text.COMMENCE);
+         if (joueur1.getTentative().size()!=0) {
+         Text.showString(Text.TENTATIVE_ET_RÉSULTAT_PRÉCÉDENTS);
+         Text.showString(joueur1.getTentative().toString());
+         Text.showString(tentaJ1.getComparatif().toString());
+         Text.showString(Text.TRAITS);
+         }
+         if (modeDev) {
+         Text.showString(Text.MODE_DEVELOPPEUR + joueur2.getGoal().toString());
+         }
+         joueur1.setTentative(joueur1.defineTentative(taille, tentaJ1));
+         Text.showString(joueur1.getTentative().toString());
+         logger.info(Text.TENTATIVE_N + essai + joueur1.getTentative());
+         tentaJ1.setComparatif(joueur2.comparison(taille, tentaJ1, joueur2.getGoal()));
+         Text.showString(tentaJ1.getComparatif().toString());
+         r = this.symbolEquals(tentaJ1, taille);
+         break;
+
+         }*/
         return r;
     }
 
     public int nombreDessais() throws IOException {
-        int nbEssai=0;
-        boolean nbEssaiJuste=false;
+        int nbEssai = 0;
+        boolean nbEssaiJuste = false;
         do {
             Text.showString(Text.A_COMBIEN_D_ESSAIS_AVEZ_VOUS_DROIT_PAR_DEFAUT + ReadPropertyFile.extractProperties().getProperty("nombreEssai"));
             Text.showString(Text.VOTRE_SAISIE_ENTER);
@@ -231,7 +235,7 @@ public class Game {
             String saisieEssai = sc.nextLine();
 
             if (saisieEssai.equals("")) {
-                nbEssai=(Integer.parseInt(ReadPropertyFile.extractProperties().getProperty("nombreEssai")));
+                nbEssai = (Integer.parseInt(ReadPropertyFile.extractProperties().getProperty("nombreEssai")));
                 nbEssaiJuste = true;
 
             } else {

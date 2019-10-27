@@ -67,7 +67,7 @@ public class Computer extends Player {
 
     private int between(int minValue, int maxValue) {
         Random randGen = new Random();
-           int max = maxValue - minValue;
+           int max = maxValue - minValue+1;
         int randNum = randGen.nextInt(max);
         randNum += minValue;
         return randNum;
@@ -100,26 +100,23 @@ public class Computer extends Player {
 
     @Override
     public List<Integer> defineTentative(int taille, Tentative tentatio) {
-
         for (int i = 0; i < taille; i++) {
             if (tentatio.combi.get(i) == 11) {
                 tentatio.combi.set(i, smallerThan());
             }else if (tentatio.comparatif.get(i).equals(Text.Kplus)) {
-                if((tentatio.borneSup.get(i)-(tentatio.borneInf.get(i)+1))>0 ) {
-                    tentatio.borneInf.set(i, (tentatio.combi.get(i) + 1));
+                if((tentatio.borneSup.get(i)-(tentatio.combi.get(i)+1))>0 ) {
+                    tentatio.borneInf.set(i, (tentatio.combi.get(i)));
                     tentatio.combi.set(i, between(tentatio.borneInf.get(i), tentatio.borneSup.get(i)));
                 }else {
-                    tentatio.borneSup.set(i,10);
-                    tentatio.borneInf.set(i,tentatio.combi.get(i));
+
                     tentatio.combi.set(i, between(tentatio.borneInf.get(i), tentatio.borneSup.get(i)));
                 }
             } else if (tentatio.comparatif.get(i).equals(Text.Kmoins)) {
-                if((((tentatio.borneSup.get(i)-1)-(tentatio.borneInf.get(i)))>0 )) {
+                if((((tentatio.borneSup.get(i)-1)-(tentatio.combi.get(i)))>0 )) {
                     tentatio.borneSup.set(i, (tentatio.combi.get(i)));
                     tentatio.combi.set(i, between(tentatio.borneInf.get(i), tentatio.borneSup.get(i)));
                 }else{
-                    tentatio.borneInf.set(i,0);
-                    tentatio.borneSup.set(i,tentatio.combi.get(i));
+
                     tentatio.combi.set(i, between(tentatio.borneInf.get(i), tentatio.borneSup.get(i)));
                 }
             }

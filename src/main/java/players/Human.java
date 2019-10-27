@@ -115,7 +115,7 @@ public class Human extends Player {
         boolean saisie;
         String saisieUser;
         do {
-            Text.affichage(Arrays.asList(Text.VEUILLEZ_SAISIR_VOTRE_COMBINAISON + taille + Text.CHIFFRES));
+            Text.affichage(Arrays.asList(Text.VEUILLEZ_SAISIR_VOTRE_TENTATIVE + taille + Text.CHIFFRES));
             Text.showString(Text.VOTRE_SAI_ENTER);
             Scanner sc = new Scanner(System.in);
             saisieUser = sc.nextLine();

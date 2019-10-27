@@ -19,19 +19,19 @@ public class Menu {
         Text.showString(Text.VOTRE_SAI_ENTER);
     }
 
-    public void displaySelectedGame(int gameChoice, Player joueur1, Player joueur2) throws IOException {
+    public void displaySelectedGame(int gameChoice, Player joueurHumain, Player joueurComputer) throws IOException {
         switch (gameChoice) {
             case 1:
-                Text.affichage(Arrays.asList(Text.VOUS_AVEZ_CHOISI_LE_MODE_CHALLENGER, Text.TRAITS, joueur1.getName() + Text.VOUS_ESSAYEZ_DE_DEVINER_LA_COMBINAISON_DE + joueur2.getName()));
-                partie.launchGame(partie.longueur(), joueur1, joueur2, gameChoice);
+                Text.affichage(Arrays.asList(Text.VOUS_AVEZ_CHOISI_LE_MODE_CHALLENGER, Text.TRAITS, joueurHumain.getName() + Text.VOUS_ESSAYEZ_DE_DEVINER_LA_COMBINAISON_DE + joueurComputer.getName()));
+                partie.launchGame(partie.longueur(), joueurHumain, joueurComputer, gameChoice);
                 break;
             case 2:
-                Text.affichage(Arrays.asList(Text.VOUS_AVEZ_CHOISI_LE_MODE_DEFENSEUR, Text.TRAITS, joueur1.getName() + Text.VOUS_ESSAYEZ_DE_DEVINER_LA_COMBINAISON_DE + joueur2.getName()));
-                partie.launchGame(partie.longueur(), joueur1, joueur2, gameChoice);
+                Text.affichage(Arrays.asList(Text.VOUS_AVEZ_CHOISI_LE_MODE_DEFENSEUR, Text.TRAITS, joueurComputer.getName() + Text.VOUS_ESSAYEZ_DE_DEVINER_LA_COMBINAISON_DE + joueurHumain.getName()));
+                partie.launchGame(partie.longueur(), joueurComputer, joueurHumain, gameChoice);
                 break;
             case 3:
                 Text.affichage(Arrays.asList(Text.VOUS_AVEZ_CHOISI_LE_MODE_DUEL, Text.TRAITS, Text.VOUS_TENTEZ_DE_DEVINER_LA_COMBINAISON_DE_L_ORDINATEUR_AVANT_QU_IL_NE_DECOUVRE_LA_VOTRE));
-                partie.launchGame(partie.longueur(), joueur1, joueur2, gameChoice);
+                partie.launchGame(partie.longueur(), joueurHumain, joueurComputer, gameChoice);
                 break;
             case 4:
                 Text.affichage(Arrays.asList(Text.DESCRIPTION_DES_MODES_DE_JEU1, Text.CHALLENGER_VOUS_ESSAYEZ_DE_TROUVER_LA_COMBINAISON_DE_L_ORDINATEUR, Text.DEFENSEUR_L_ORDINATEUR_ESSAIE_DE_TROUVER_VOTRE_COMBINAISON, Text.DUEL_IA_ET_UTLISATEUR_ESSAIENT_CHACUN_LEUR_TOUR_DE_TROUVER_EN_PREMIER_LA_COMBINAISON_ADVERSE));

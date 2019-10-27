@@ -4,7 +4,7 @@ package main.java.com.ocr.pierrealainpolymorph;
 import java.util.List;
 
 public class Text {
-    public static final String A_COMBIEN_D_ESSAIS_AVEZ_VOUS_DROIT_PAR_DEFAUT = " A combien d'essais avez-vous droit ? :(par defaut = ";
+    public static final String A_COMBIEN_D_ESSAIS_AVEZ_VOUS_DROIT_PAR_DEFAUT = " A combien d'essais avez-vous droit ? Par defaut = ";
     public static final String AU_LIEU_DE_1_2_3_4_OU_5 = " au lieu de 1,2,3,4 ou 5 ";
     public static final String AU_REVOIR = " Au revoir et à bientôt !";
     public static final String ALLEZ_C_EST_PARTI_ON_COMMENCE = " Allez c'est parti !! On commence !";
@@ -31,7 +31,7 @@ public class Text {
     public static final String FRANCK_RIBERY = " Franck Ribéry ";
     public static final String FRANCK_RIBERY3 = " 3. Franck Ribéry ";
     public static final String FELICITATIONS_VOUS_AVEZ_CASSE_LE_CODE = " Félicitations vous avez cassé le code!!! ";
-    public static final String FELICITATIONS_VOUS_AVEZ_CASSE_LE_CODE_EN_PREMIER = " Félicitations vous avez cassé le code en premier !!! ";
+    public static final String FELICITATIONS_VOUS_AVEZ_CASSE_LE_CODE_EN_PREMIER = " Dommage , l'ordinateur a cassé votre code en premier !!! ";
     public static final String IL_FAUT_CHOISIR_UN_CHIFFRE_ENTRE_1_3 = " Il faut choisir un chiffre entre 1 & 3 ";
     public static final String IL_FAUT_CHOISIR_UN_CHIFFRE_ENTRE_1_5 = " Il faut choisir un chiffre entre 1 & 5 ";
     public static final String IL_FAUT_SAISIR_UNE_COMBINAISON_DE_CHIFFRES = " Il faut saisir une combinaison de chiffres ";
@@ -62,7 +62,8 @@ public class Text {
     public static final String TENTATIVE_ET_RÉSULTAT_PRÉCÉDENTS = " Tentative et résultat précédents :";
     public static final String TRAITS = "------------------------------------------------------------";
     public static final String OUI_NON = " oui ||  non ";
-    public static final String VEUILLEZ_SAISIR_VOTRE_COMBINAISON = " Veuillez saisir votre combinaison ";
+    public static final String VEUILLEZ_SAISIR_VOTRE_COMBINAISON = " Veuillez saisir votre combinaison de  ";
+    public static final String VEUILLEZ_SAISIR_VOTRE_TENTATIVE = " Veuillez saisir votre tentative ";
     public static final String VOTRE_SAISIE_ENTER = " ( votre saisie (ou rien) + ENTER )";
     public static final String VOTRE_SAI_ENTER = " ( votre saisie + ENTER )";
     public static final String VOUS_AVEZ_CHOISI_LE_MODE_CHALLENGER = " Vous avez choisi le mode Challenger ";
