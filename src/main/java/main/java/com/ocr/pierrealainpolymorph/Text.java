@@ -27,7 +27,7 @@ public class Text {
     public static final String DUEL_GAGNEE = " Duel gagnée ";
     public static final String EN_DESSOUS = " 1. en dessous || 2. Egale ||3. Au dessus ";
     public static final String ESSAI_N = " Essai n° ";
-    public static final String ETES_VOUS_UN_TRICHEUR = " Êtes-vous un tricheur ? ";
+    public static final String ETES_VOUS_UN_TRICHEUR = " Voulez-vous activer le mode développeur ? ";
     public static final String FRANCK_RIBERY = " Franck Ribéry ";
     public static final String FRANCK_RIBERY3 = " 3. Franck Ribéry ";
     public static final String FELICITATIONS_VOUS_AVEZ_CASSE_LE_CODE = " Félicitations vous avez cassé le code!!! ";
@@ -50,7 +50,7 @@ public class Text {
     public static final String MODE_DEFENSEUR_2 = " 2. Mode défenseur ";
     public static final String MODE_DEVELOPPEUR = " Mode développeur";
     public static final String MODE_DUEL_3 = " 3. Mode Duel ";
-    public static final String MODE_TRICHEUR_ACTIVE = " mode tricheur activé ";
+    public static final String MODE_TRICHEUR_ACTIVE = " mode développeur activé ";
     public static final String PARTIE_CONTINUEE = " partie continuée ";
     public static final String PARTIE_GAGNEE = " Partie gagnée ";
     public static final String PARTIE_PERDUE = " Partie perdue ";
@@ -73,7 +73,8 @@ public class Text {
     public static final String VOUS_ESSAYEZ_DE_DEVINER_LA_COMBINAISON_DE = " vous essayez de deviner la combinaison de ";
     public static final String VOULEZ_VOUS_REFAIRE_UNE_PARTIE = " voulez-vous refaire une partie ? ";
     public static final String VOUS_TENTEZ_DE_DEVINER_LA_COMBINAISON_DE_L_ORDINATEUR_AVANT_QU_IL_NE_DECOUVRE_LA_VOTRE = " Vous tentez de deviner la combinaison de l'ordinateur avant qu'il ne découvre la votre ! ";
-
+    public static final String MALHEUREUSEMENT = "Malheureusement, ";
+    public static final String A_CASSE_VOTRE_CODE = " a cassé votre code !";
 
     public static final String OBJECTIFS_A_DEVINER = " Objectifs à deviner : ";
     public static final String Kmoins = " - ";

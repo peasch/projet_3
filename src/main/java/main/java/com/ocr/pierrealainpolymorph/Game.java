@@ -13,8 +13,7 @@ import static org.apache.log4j.Logger.getLogger;
 public class Game {
 
 
-    public static final String MALHEUREUSEMENT = "Malheureusement, ";
-    public static final String A_CASSE_VOTRE_CODE = " a cassé votre code !";
+
     private int taille;
     final static Logger logger = getLogger(Game.class);
 
@@ -72,7 +71,7 @@ public class Game {
         Tentative tentaJ1 = new Tentative();
         Tentative tentaJ2 = new Tentative();
         int nbTry = this.settingGame(choice, playerOne, playerTwo, tentaJ1, tentaJ2);
-        modeDev = menu.cEstParti(choice, playerOne, playerTwo);
+        modeDev = menu.cEstParti();
         do {
             Text.showString(Text.ESSAI_N + essai);
             int rP1 = this.playerRound(playerOne, playerTwo, essai, choice, tentaJ2, modeDev);
@@ -109,7 +108,7 @@ public class Game {
                     Text.showString(Text.FELICITATIONS_VOUS_AVEZ_CASSE_LE_CODE);
                     break;
                 case 2:
-                    Text.showString((MALHEUREUSEMENT + attacker.getName()+ A_CASSE_VOTRE_CODE));
+                    Text.showString((Text.MALHEUREUSEMENT + attacker.getName()+ Text.A_CASSE_VOTRE_CODE));
                     break;
             }
             logger.info(Text.PARTIE_GAGNEE);
@@ -177,51 +176,6 @@ public class Game {
         tentaJ2.setComparatif(joueur2.comparison(taille, tentaJ2, joueur2.getGoal()));
         Text.showString(tentaJ2.getComparatif().toString());
         r = this.symbolEquals(tentaJ2, taille);
-        /** switch (choice) {
-         case 1:
-         Text.showString(joueur1.getName());
-         if (modeDev) {
-         Text.showString(Text.MODE_DEVELOPPEUR + joueur2.getGoal().toString());
-         }
-         joueur1.setTentative(joueur1.defineTentative(taille, tentaJ1));
-         Text.showString(joueur1.getTentative().toString());
-         logger.info(Text.TENTATIVE_N + essai + joueur1.getTentative());
-         tentaJ1.setComparatif(joueur2.comparison(taille, tentaJ1, joueur2.getGoal()));
-         Text.showString(tentaJ1.getComparatif().toString());
-         r = this.symbolEquals(tentaJ1, taille);
-         break;
-         case 2:
-         if (modeDev) {
-         Text.showString(Text.MODE_DEVELOPPEUR + joueur1.getGoal().toString());
-         }
-         joueur2.setTentative(joueur2.defineTentative(taille, tentaJ2));
-         Text.showString(joueur2.getTentative().toString());
-         logger.info(Text.TENTATIVE_N + essai + joueur2.getTentative());
-         tentaJ2.setComparatif(joueur1.comparison(taille, tentaJ2, joueur1.getGoal()));
-         Text.showString(tentaJ2.getComparatif().toString());
-         r = this.symbolEquals(tentaJ2, taille);
-         break;
-
-         case 3:
-         Text.showString(joueur1.getName() + Text.COMMENCE);
-         if (joueur1.getTentative().size()!=0) {
-         Text.showString(Text.TENTATIVE_ET_RÉSULTAT_PRÉCÉDENTS);
-         Text.showString(joueur1.getTentative().toString());
-         Text.showString(tentaJ1.getComparatif().toString());
-         Text.showString(Text.TRAITS);
-         }
-         if (modeDev) {
-         Text.showString(Text.MODE_DEVELOPPEUR + joueur2.getGoal().toString());
-         }
-         joueur1.setTentative(joueur1.defineTentative(taille, tentaJ1));
-         Text.showString(joueur1.getTentative().toString());
-         logger.info(Text.TENTATIVE_N + essai + joueur1.getTentative());
-         tentaJ1.setComparatif(joueur2.comparison(taille, tentaJ1, joueur2.getGoal()));
-         Text.showString(tentaJ1.getComparatif().toString());
-         r = this.symbolEquals(tentaJ1, taille);
-         break;
-
-         }*/
         return r;
     }
 

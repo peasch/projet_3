@@ -4,7 +4,10 @@ import org.apache.log4j.Logger;
 import players.Player;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.InputMismatchException;
+import java.util.Scanner;
 
 import static org.apache.log4j.Logger.getLogger;
 
@@ -73,21 +76,25 @@ public class Menu {
     }
 
 
-
-    public boolean cEstParti(int choice, Player joueur1, Player joueur2) {
+    public boolean cEstParti() throws IOException {
         String triche = "";
-        boolean dev=false;
-        Text.affichage(Arrays.asList(Text.TRAITS, Text.ALLEZ_C_EST_PARTI_ON_COMMENCE, Text.ETES_VOUS_UN_TRICHEUR));
-        Text.showString((Text.VOTRE_SAISIE_ENTER));
-        Scanner sc = new Scanner(System.in);
-        triche = sc.nextLine();
-        if (triche.equals("oui")) {
+        boolean dev = false;
+        String modDev = (ReadPropertyFile.extractProperties().getProperty("modeDeveloppeur"));
+        if (modDev.contains("on")) {
+            dev = true;
+            Text.showString(Text.MODE_TRICHEUR_ACTIVE);
+            logger.info(Text.MODE_TRICHEUR_ACTIVE);
+        } else {
+            Text.affichage(Arrays.asList(Text.TRAITS, Text.ALLEZ_C_EST_PARTI_ON_COMMENCE, Text.ETES_VOUS_UN_TRICHEUR));
+            Text.showString((Text.VOTRE_SAISIE_ENTER));
+            Scanner sc = new Scanner(System.in);
+            triche = sc.nextLine();
+            if (triche.equals("oui")) {
                 logger.info(Text.MODE_TRICHEUR_ACTIVE);
                 dev = true;
-
+            }
         }
         return dev;
-
     }
 
     public Boolean recommencer() {
