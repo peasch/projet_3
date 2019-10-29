@@ -1,7 +1,5 @@
 package players;
 
-
-import main.java.com.ocr.pierrealainpolymorph.Menu;
 import main.java.com.ocr.pierrealainpolymorph.Tentative;
 import main.java.com.ocr.pierrealainpolymorph.Text;
 import org.apache.log4j.Logger;

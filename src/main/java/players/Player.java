@@ -1,9 +1,7 @@
 package players;
 
-        import org.apache.log4j.Logger;
         import java.util.ArrayList;
         import java.util.List;
-        import static org.apache.log4j.Logger.getLogger;
 
 public abstract class Player implements PlayerAction{
 
@@ -13,13 +11,6 @@ public abstract class Player implements PlayerAction{
     protected List<Integer> memoire = new ArrayList<>();
     protected List<String> compare = new ArrayList<>();
 
-    public List<String> getCompare() {
-        return compare;
-    }
-
-    public void setCompare(List<String> compare) {
-        this.compare = compare;
-    }
 
     public List<Integer> getGoal() {
         return goal;

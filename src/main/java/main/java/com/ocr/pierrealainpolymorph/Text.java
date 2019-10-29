@@ -1,6 +1,4 @@
 package main.java.com.ocr.pierrealainpolymorph;
-
-
 import java.util.List;
 
 public class Text {
@@ -59,7 +57,7 @@ public class Text {
     public static final String QUEL_MODE_DE_JEU_VOULEZ_VOUS_CHOISIR = " Quel mode de jeu voulez-vous choisir ? ";
     public static final String QUITTER = " 5.Quitter ";
     public static final String TENTATIVE_N = " Tentative n° ";
-    public static final String TENTATIVE_ET_RÉSULTAT_PRÉCÉDENTS = " Tentative et résultat précédents :";
+    public static final String TENTATIVE_ET_RESULTAT_PRECEDENTS = " Tentative et résultat précédents :";
     public static final String TRAITS = "------------------------------------------------------------";
     public static final String OUI_NON = " oui ||  non ";
     public static final String VEUILLEZ_SAISIR_VOTRE_COMBINAISON = " Veuillez saisir votre combinaison de  ";

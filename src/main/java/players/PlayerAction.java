@@ -1,7 +1,6 @@
 package players;
 
 import main.java.com.ocr.pierrealainpolymorph.Tentative;
-
 import java.io.IOException;
 import java.util.List;
 

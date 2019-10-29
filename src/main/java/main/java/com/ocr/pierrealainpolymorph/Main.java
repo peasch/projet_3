@@ -1,5 +1,6 @@
 package main.java.com.ocr.pierrealainpolymorph;
 
+import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 import players.Computer;
 import players.Human;
@@ -15,6 +16,7 @@ public class Main {
 
 
     public static void main(String[] args) throws IOException {
+        BasicConfigurator.configure();
         Menu menu = new Menu();
         Player joueurHumain = new Human();
         Player joueurComputer = new Computer();
