@@ -14,7 +14,7 @@ public class Main {
 
 
     public static void main(String[] args) throws IOException {
-       /*org.apache.log4j.BasicConfigurator.configure();*/
+      /* org.apache.log4j.BasicConfigurator.configure();*/
 
         Menu menu = new Menu();
         Player joueurHumain = new Human();

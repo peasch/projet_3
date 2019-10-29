@@ -67,8 +67,8 @@ public class Computer extends Player {
 
     private int between(int minValue, int maxValue) {
         Random randGen = new Random();
-           int max = maxValue - minValue+1;
-        int randNum = randGen.nextInt(max);
+           int max = maxValue - minValue;
+        int randNum = randGen.nextInt(max+1);
         randNum += minValue;
         return randNum;
     }
@@ -105,7 +105,7 @@ public class Computer extends Player {
                 tentatio.combi.set(i, smallerThan());
             }else if (tentatio.comparatif.get(i).equals(Text.Kplus)) {
                 if((tentatio.borneSup.get(i)-(tentatio.combi.get(i)+1))>0 ) {
-                    tentatio.borneInf.set(i, (tentatio.combi.get(i)));
+                    tentatio.borneInf.set(i, (tentatio.combi.get(i)+1));
                     tentatio.combi.set(i, between(tentatio.borneInf.get(i), tentatio.borneSup.get(i)));
                 }else {
 
@@ -113,7 +113,7 @@ public class Computer extends Player {
                 }
             } else if (tentatio.comparatif.get(i).equals(Text.Kmoins)) {
                 if((((tentatio.borneSup.get(i)-1)-(tentatio.combi.get(i)))>0 )) {
-                    tentatio.borneSup.set(i, (tentatio.combi.get(i)));
+                    tentatio.borneSup.set(i, (tentatio.combi.get(i)-1));
                     tentatio.combi.set(i, between(tentatio.borneInf.get(i), tentatio.borneSup.get(i)));
                 }else{
 
