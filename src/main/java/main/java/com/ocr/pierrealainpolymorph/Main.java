@@ -7,8 +7,6 @@ import players.Human;
 import players.Player;
 
 import java.io.IOException;
-import java.util.Collections;
-
 import static org.apache.log4j.Logger.getLogger;
 
 public class Main {
@@ -16,12 +14,13 @@ public class Main {
 
 
     public static void main(String[] args) throws IOException {
-        BasicConfigurator.configure();
+       /*org.apache.log4j.BasicConfigurator.configure();*/
+
         Menu menu = new Menu();
         Player joueurHumain = new Human();
         Player joueurComputer = new Computer();
         logger.info("--------------------------------------------------------------------------");
-        Text.affichage(Collections.singletonList(Text.BIENVENUE_DANS_LE_JEU));
+        Text.showString(Text.BIENVENUE_DANS_LE_JEU);
         Boolean continuer = true;
         joueurHumain.defineName();
         joueurComputer.defineName();
